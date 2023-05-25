@@ -84,9 +84,7 @@ Here are some examples of using the OpenAI Toolkit:
    const maxTokens = 50;
    const modelType = 'gpt-3.5-turbo';
    const PARAMETERS = '';
-  
-
- const apiKey = 'your_api_key_here';
+   const apiKey = 'your_api_key_here';
 
    function onData(output) {
      console.log(output);
@@ -118,10 +116,6 @@ Here are some examples of using the OpenAI Toolkit:
 
    function onEnd() {
      console.log('Generation completed.');
-   }
-
-   function saveToFile(data) {
-     fs.writeFileSync('output.txt', data);
    }
 
    call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
