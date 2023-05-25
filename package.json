@@ -1,0 +1,15 @@
+{
+  "name": "openai-toolkit",
+  "version": "1.0.0",
+  "description": "A toolkit to query openAI language models.",
+  "main": "caller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jovan Milicev",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "tiktoken": "^1.0.7"
+  }
+}
