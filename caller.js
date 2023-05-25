@@ -1,10 +1,30 @@
 const https = require('https');
-const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey) {
+function saveToFile(data, name) {
 
+  //name currently not supported
+
+  const currentDate = new Date();
+  const fileName = `output-${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}-${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}.txt`;
+  const folderPath = path.join(__dirname, 'outputs');
+
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath);
+  }
+
+  const filePath = path.join(folderPath, fileName);
+
+  fs.writeFileSync(filePath, data, 'utf8');
+  console.log(`File saved successfully: ${filePath}`);
+}
+
+function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd) {
   var rctoken = 0;
   var trtoken = 0;
+
+  var filebuilder = ""
 
   var potentialErrorString = "";
 
@@ -27,67 +47,72 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey) {
       let responseData = '';
 
       res.on('data', (chunk) => {
-        responseData = chunk.toString();
+        responseData += chunk.toString();
         potentialErrorString += responseData;
-        if (responseData.indexOf("content") != -1) {
-          rctoken++;
-          const inputString = responseData;
 
-          const startIndex = inputString.indexOf(startDelimiter) + startDelimiter.length;
-          const endIndex = inputString.indexOf(endDelimiter, startIndex);
+        while (responseData.indexOf(startDelimiter) !== -1 && responseData.indexOf(endDelimiter) !== -1) {
+          const startIndex = responseData.indexOf(startDelimiter) + startDelimiter.length;
+          const endIndex = responseData.indexOf(endDelimiter, startIndex);
 
           if (startIndex !== -1 && endIndex !== -1) {
-            const content = inputString.substring(startIndex, endIndex);
+            const content = responseData.substring(startIndex, endIndex);
             const output = content.replace(/\\n/g, '\n');
-            process.stdout.write(output);
+            rctoken++;
+            filebuilder+=output;
+            onData(output);
+            responseData = responseData.substring(endIndex + endDelimiter.length);
           } else {
-            console.log('Content not found');
+            break;
           }
         }
       });
 
       res.on('end', () => {
+        if (PARAMETERS.includes("e")) {
+          onData("%^& END");
+        }
 
-        if(PARAMETERS.includes("e")){
-          process.stdout.write("%^& END");
+        if (PARAMETERS.includes("f")) {
+          saveToFile(filebuilder);
         }
 
         const totaltokens = rctoken + trtoken;
         const priceinCENTS = totaltokens * gpt35turbo_RATE * 100;
 
-        if (rctoken == 0) {
-          console.log("\n\nERROR DETECTED: ")
-          console.log("LIKELY API KEY / API ISSUE\n")
-          console.log(potentialErrorString + "\n\n");
-          console.log("\n\nEND ERROR")
+        if (rctoken === 0) {
+          const error = "\n\nERROR DETECTED: \nLIKELY API KEY / API ISSUE\n\n" + potentialErrorString + "\n\n\nEND ERROR";
+          onData(error);
         } else if (PARAMETERS.includes("a") || PARAMETERS.includes("A")) {
-          console.log('\n\n -- analytics --');
-          console.log("prompt tokens spent: " + trtoken);
-          console.log("completion tokens spent: " + rctoken);
-          console.log("total tokens spent: " + (totaltokens))
-          console.log("estimated cost: ¢" + priceinCENTS.toFixed(3))
-          console.log(' ---- ---- ---- \n');
+          const analytics = '\n\n -- analytics --\n' +
+            "prompt tokens spent: " + trtoken + '\n' +
+            "completion tokens spent: " + rctoken + '\n' +
+            "total tokens spent: " + totaltokens + '\n' +
+            "estimated cost: ¢" + priceinCENTS.toFixed(3) + '\n' +
+            ' ---- ---- ---- \n';
+          onData(analytics);
         } else {
-          if(!PARAMETERS.includes("s")){
-            console.log('\n\n ---- ---- ----  ----  ----  ---- \n\n');
+          if (!PARAMETERS.includes("s")) {
+            onData('\n\n ---- ---- ----  ----  ----  ---- \n\n');
           }
         }
+
+        onEnd();
       });
     }
   );
 
   req.on('error', (e) => {
-    console.error("Problem with request" + e)
+    console.error("Problem with request" + e);
   });
 
   function estimateTokenCount(text) {
-    //according to openAI, each token is aprox 4 char
-    return Math.round(text.length/4);
+    //according to OpenAI, each token is approximately 4 characters
+    return Math.round(text.length / 4);
   }
 
   function processCall() {
-    if (PARAMETERS == "-a") {
-      trtoken = estimateTokenCount(input)
+    if (PARAMETERS === "-a") {
+      trtoken = estimateTokenCount(input);
     }
     var body = JSON.stringify({
       messages: [
@@ -102,9 +127,9 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey) {
       stream: true
     });
 
-    if(!PARAMETERS.includes("s")){
-        console.log("\n -- GPT: --");
-        console.log("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
+    if (!PARAMETERS.includes("s")) {
+      onData("\n -- GPT: --");
+      onData("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
     }
     req.write(body);
     req.end();
