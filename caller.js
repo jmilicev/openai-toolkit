@@ -17,7 +17,6 @@ function saveToFile(data, name) {
   const filePath = path.join(folderPath, fileName);
 
   fs.writeFileSync(filePath, data, 'utf8');
-  console.log(`File saved successfully: ${filePath}`);
 }
 
 function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd) {
@@ -69,7 +68,7 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
 
       res.on('end', () => {
         if (PARAMETERS.includes("e")) {
-          onData("%^& END");
+          onData(" %^& END");
         }
 
         if (PARAMETERS.includes("f")) {
@@ -83,6 +82,7 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
           const error = "\n\nERROR DETECTED: \nLIKELY API KEY / API ISSUE\n\n" + potentialErrorString + "\n\n\nEND ERROR";
           onData(error);
         } else if (PARAMETERS.includes("a") || PARAMETERS.includes("A")) {
+          trtoken = estimateTokenCount(input);
           const analytics = '\n\n -- analytics --\n' +
             "prompt tokens spent: " + trtoken + '\n' +
             "completion tokens spent: " + rctoken + '\n' +
@@ -111,9 +111,6 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
   }
 
   function processCall() {
-    if (PARAMETERS === "-a") {
-      trtoken = estimateTokenCount(input);
-    }
     var body = JSON.stringify({
       messages: [
         {
@@ -128,8 +125,8 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
     });
 
     if (!PARAMETERS.includes("s")) {
-      onData("\n -- GPT: --");
-      onData("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
+      onData("\n -- GPT: --\n");
+      onData("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n\n");
     }
     req.write(body);
     req.end();
