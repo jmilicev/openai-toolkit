@@ -54,7 +54,6 @@ To use the OpenAI Toolkit, follow these steps:
    - `modelType` (string): Specifies the GPT model to use. For example, "gpt-3.5-turbo" is the most advanced model as of the last update.
    - `PARAMETERS` (string): Additional parameters for customizing the behavior of the function. Supported options include:
      - `"a"`: Enable analytics to estimate token count and cost.
-     - `"A"`: Enable analytics and display detailed token count and cost information.
      - `"e"`: Append an end indicator to the generated output.
      - `"f"`: Save the generated output to a file.
      - `"s"`: Silent mode, disables additional output.
