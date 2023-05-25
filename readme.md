@@ -24,14 +24,7 @@ const modelType = 'gpt-3.5-turbo';
 const parameters = '-a';
 const apiKey = 'YOUR_API_KEY';
 
-openai.call(input, temperature, maxTokens, modelType, parameters, apiKey)
-  .then((response) => {
-    console.log('Generated completion:', response.output);
-    // Access other properties such as response.analyticsInfo if applicable
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+openai.call(input, temperature, maxTokens, modelType, parameters, apiKey);
 ```
 
 ## Functionality
@@ -48,7 +41,7 @@ The `call` function in the OpenAI Toolkit accepts the following parameters:
   - `'s'` or `'S'`: Silence the additional console output during the API call.
 - `apiKey` (string): Your OpenAI API key.
 
-The `call` function returns a Promise that resolves to an object containing the generated completion output and, if applicable, analytics information.
+The `call` function prints the streamed version of the output to the console, along with any additional specified parameters.
 
 Please ensure that you have a valid OpenAI API key before using this package.
 
