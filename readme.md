@@ -1,5 +1,5 @@
 
-```markdown
+
 # openAI-toolkit
 
 The OpenAI Toolkit is a Node.js package that provides a convenient way to interact with the OpenAI GPT-3 API. It allows you to generate chat-based completions using the GPT-3 language model.
