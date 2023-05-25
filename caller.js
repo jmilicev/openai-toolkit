@@ -55,7 +55,7 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
           console.log("LIKELY API KEY / API ISSUE\n")
           console.log(potentialErrorString + "\n\n");
           console.log("\n\nEND ERROR")
-        } else if (analytics == "-a") {
+        } else if (analytics.includes("a") || analytics.includes("A")) {
           console.log('\n\n -- analytics --');
           console.log("prompt tokens spent: " + trtoken);
           console.log("completion tokens spent: " + rctoken);
@@ -63,7 +63,9 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
           console.log("estimated cost: ¢" + priceinCENTS.toFixed(3))
           console.log(' ---- ---- ---- \n');
         } else {
-          console.log('\n ---- ---- ---- \n\n');
+          if(!analytics.includes("s")){
+            console.log('\n\n ---- ---- ----  ----  ----  ---- \n\n');
+          }
         }
       });
     }
@@ -95,9 +97,10 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
       stream: true
     });
 
-    console.log("\n -- GPT: --");
-    console.log("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
-
+    if(!analytics.includes("s")){
+        console.log("\n -- GPT: --");
+        console.log("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
+    }
     req.write(body);
     req.end();
   }
