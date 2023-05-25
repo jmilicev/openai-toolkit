@@ -1,7 +1,7 @@
 const https = require('https');
 const { exec } = require('child_process');
 
-function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
+function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey) {
 
   var rctoken = 0;
   var trtoken = 0;
@@ -47,6 +47,11 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
       });
 
       res.on('end', () => {
+
+        if(PARAMETERS.includes("e")){
+          process.stdout.write("%^& END");
+        }
+
         const totaltokens = rctoken + trtoken;
         const priceinCENTS = totaltokens * gpt35turbo_RATE * 100;
 
@@ -55,7 +60,7 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
           console.log("LIKELY API KEY / API ISSUE\n")
           console.log(potentialErrorString + "\n\n");
           console.log("\n\nEND ERROR")
-        } else if (analytics.includes("a") || analytics.includes("A")) {
+        } else if (PARAMETERS.includes("a") || PARAMETERS.includes("A")) {
           console.log('\n\n -- analytics --');
           console.log("prompt tokens spent: " + trtoken);
           console.log("completion tokens spent: " + rctoken);
@@ -63,7 +68,7 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
           console.log("estimated cost: ¢" + priceinCENTS.toFixed(3))
           console.log(' ---- ---- ---- \n');
         } else {
-          if(!analytics.includes("s")){
+          if(!PARAMETERS.includes("s")){
             console.log('\n\n ---- ---- ----  ----  ----  ---- \n\n');
           }
         }
@@ -81,7 +86,7 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
   }
 
   function processCall() {
-    if (analytics == "-a") {
+    if (PARAMETERS == "-a") {
       trtoken = estimateTokenCount(input)
     }
     var body = JSON.stringify({
@@ -97,7 +102,7 @@ function callAPI(input, temperature, maxTokens, modelType, analytics, apiKey) {
       stream: true
     });
 
-    if(!analytics.includes("s")){
+    if(!PARAMETERS.includes("s")){
         console.log("\n -- GPT: --");
         console.log("temp = " + temperature + " | m-t = " + maxTokens + " | mdl = " + modelType + "\n");
     }
