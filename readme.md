@@ -1,5 +1,4 @@
 
-```markdown
 # OpenAI Toolkit
 
 The OpenAI Toolkit is a Node.js module that provides a convenient interface for interacting with OpenAI's GPT models through the OpenAI API. It allows you to generate text based on prompts and provides additional features such as saving output to a file and estimating token count and cost.
@@ -154,7 +153,3 @@ Here are some examples of using the OpenAI Toolkit:
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-```
-
-Please note that you may need to modify the sections and instructions based on your specific implementation and requirements.
