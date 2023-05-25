@@ -146,4 +146,4 @@ Here are some examples of using the OpenAI Toolkit:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+Feel free to use this project as you please!
