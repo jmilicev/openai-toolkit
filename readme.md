@@ -1,5 +1,4 @@
 
-```markdown
 # OpenAI Toolkit
 
 The OpenAI Toolkit is a Node.js module that provides a convenient interface for interacting with OpenAI's GPT models through the OpenAI API. It allows you to generate text based on prompts and provides additional features such as saving output to a file and estimating token count and cost.
@@ -55,7 +54,6 @@ To use the OpenAI Toolkit, follow these steps:
    - `modelType` (string): Specifies the GPT model to use. For example, "gpt-3.5-turbo" is the most advanced model as of the last update.
    - `PARAMETERS` (string): Additional parameters for customizing the behavior of the function. Supported options include:
      - `"a"`: Enable analytics to estimate token count and cost.
-     - `"A"`: Enable analytics and display detailed token count and cost information.
      - `"e"`: Append an end indicator to the generated output.
      - `"f"`: Save the generated output to a file.
      - `"s"`: Silent mode, disables additional output.
@@ -85,9 +83,7 @@ Here are some examples of using the OpenAI Toolkit:
    const maxTokens = 50;
    const modelType = 'gpt-3.5-turbo';
    const PARAMETERS = '';
-  
-
- const apiKey = 'your_api_key_here';
+   const apiKey = 'your_api_key_here';
 
    function onData(output) {
      console.log(output);
@@ -121,10 +117,6 @@ Here are some examples of using the OpenAI Toolkit:
      console.log('Generation completed.');
    }
 
-   function saveToFile(data) {
-     fs.writeFileSync('output.txt', data);
-   }
-
    call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
    ```
 
@@ -153,8 +145,4 @@ Here are some examples of using the OpenAI Toolkit:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-
-```
-
-Please note that you may need to modify the sections and instructions based on your specific implementation and requirements.
+Feel free to use this project as you please!
