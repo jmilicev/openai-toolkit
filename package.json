@@ -9,7 +9,6 @@
   "author": "Jovan Milicev",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.3",
-    "tiktoken": "^1.0.7"
+    "dotenv": "^16.0.3"
   }
 }
