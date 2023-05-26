@@ -1,8 +1,8 @@
 const { call } = require('./caller');
 
 const input = 'what is a crocodile';
-const temperature = 0.7;
-const maxTokens = 30;
+const temperature = 1;
+const maxTokens = 50;
 const modelType = 'gpt-3.5-turbo'; // Replace with your desired model type
 const PARAMETERS = 'a';
 const apiKey = ''; // Replace with your OpenAI API key

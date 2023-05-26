@@ -20,11 +20,38 @@ function saveToFile(data, name) {
 }
 
 function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd) {
+  //check parameters
+  if(input == ""){
+    console.log("ERROR: cannot have empty message")
+    process.exit();
+  }if(temperature>1 || temperature<0){
+    console.log("ERROR: temperature must be between 0 and 1 inclusive");
+    process.exit();
+  }if(maxTokens<1){
+    console.log("ERROR: max tokens cannot be 0 or negative");
+    process.exit();
+  }
+
+
+  const options = [
+    'gpt-4',
+    'gpt-4-0314',
+    'gpt-4-32k',
+    'gpt-4-32k-0314',
+    'gpt-3.5-turbo',
+    'gpt-3.5-turbo-0301'
+  ];
+
+  if(!options.includes(modelType)){
+    console.log("ERROR: model is not a valid option");
+    console.log("options: gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301");
+    process.exit();
+  }
+  
   var rctoken = 0;
   var trtoken = 0;
 
   var filebuilder = ""
-
   var potentialErrorString = "";
 
   const startDelimiter = '{"content":"';
