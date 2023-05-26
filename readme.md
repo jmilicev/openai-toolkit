@@ -30,19 +30,13 @@ To use the OpenAI Toolkit, follow these steps:
 
 1. Get your OpenAI API key from the OpenAI website. You will need this key to make API requests.
 
-2. Configure the API key by creating a `.env` file in your project directory and adding the following line:
-
-   ```plaintext
-   OPENAI_API_KEY=your_api_key_here
-   ```
-
-3. Create a new JavaScript file (e.g., `app.js`) and require the OpenAI Toolkit module:
+2. Create a new JavaScript file (e.g., `app.js`) and require the OpenAI Toolkit module:
 
    ```javascript
    const { call } = require('openai-toolkit');
    ```
 
-4. Use the `call` function to generate text:
+3. Use the `call` function to generate text:
 
    ```javascript
    call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
@@ -52,6 +46,8 @@ To use the OpenAI Toolkit, follow these steps:
    - `temperature` (number): Controls the randomness of the generated text. A higher value (e.g., 0.8) produces more random outputs, while a lower value (e.g., 0.2) produces more deterministic outputs.
    - `maxTokens` (number): Limits the length of the generated text. You can set the maximum number of tokens the model should generate.
    - `modelType` (string): Specifies the GPT model to use. For example, "gpt-3.5-turbo" is the most advanced model as of the last update.
+     - Valid options are: `'gpt-4'`,`'gpt-4-0314'`, `'gpt-4-32k'`, `'gpt-4-32k-0314'`, `'gpt-3.5-turbo'`, `'gpt-3.5-turbo-0301'`
+     - note you can only use gpt-4-* models if you have been given access by the openAI team, you do not have them default.
    - `PARAMETERS` (string): Additional parameters for customizing the behavior of the function. Supported options include:
      - `"a"`: Enable analytics to estimate token count and cost.
      - `"e"`: Append an end indicator to the generated output.
@@ -61,13 +57,13 @@ To use the OpenAI Toolkit, follow these steps:
    - `onData` (function): Callback function to handle the generated output. Receives the generated text as a parameter.
    - `onEnd` (function): Callback function called when the generation process ends.
 
-5. Run your JavaScript file using Node.js:
+4. Run your JavaScript file using Node.js:
 
    ```shell
    node app.js
    ```
 
-6. The generated text will be displayed according to your specified parameters.
+5. The generated text will be displayed according to your specified parameters.
 
 ## Examples
 
