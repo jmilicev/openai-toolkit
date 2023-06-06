@@ -1,34 +1,16 @@
 const https = require('https');
-const fs = require('fs');
 const path = require('path');
-
-function saveToFile(data, name) {
-
-  //name currently not supported
-
-  const currentDate = new Date();
-  const fileName = `output-${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}-${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}.txt`;
-  const folderPath = path.join(__dirname, 'outputs');
-
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath);
-  }
-
-  const filePath = path.join(folderPath, fileName);
-
-  fs.writeFileSync(filePath, data, 'utf8');
-}
 
 function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd) {
   //check parameters
   if(input == ""){
-    console.log("ERROR: cannot have empty message")
+    onData("\nERROR: cannot have empty message\n");
     process.exit();
   }if(temperature>1 || temperature<0){
-    console.log("ERROR: temperature must be between 0 and 1 inclusive");
+    onData("ERROR: temperature must be between 0 and 1 inclusive");
     process.exit();
   }if(maxTokens<1){
-    console.log("ERROR: max tokens cannot be 0 or negative");
+    onData("ERROR: max tokens cannot be 0 or negative");
     process.exit();
   }
 
@@ -43,8 +25,8 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
   ];
 
   if(!options.includes(modelType)){
-    console.log("ERROR: model is not a valid option");
-    console.log("options: gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301");
+    onData("ERROR: model is not a valid option");
+    onData("options: gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301");
     process.exit();
   }
   
@@ -98,9 +80,6 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
           onData(" %^& END");
         }
 
-        if (PARAMETERS.includes("f")) {
-          saveToFile(filebuilder);
-        }
 
         const totaltokens = rctoken + trtoken;
         const priceinCENTS = totaltokens * gpt35turbo_RATE * 100;
@@ -129,7 +108,7 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
   );
 
   req.on('error', (e) => {
-    console.error("Problem with request" + e);
+    onData("Problem with request" + e);
   });
 
   function estimateTokenCount(text) {
