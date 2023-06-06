@@ -51,7 +51,6 @@ To use the OpenAI Toolkit, follow these steps:
    - `PARAMETERS` (string): Additional parameters for customizing the behavior of the function. Supported options include:
      - `"a"`: Enable analytics to estimate token count and cost.
      - `"e"`: Append an end indicator to the generated output.
-     - `"f"`: Save the generated output to a file.
      - `"s"`: Silent mode, disables additional output.
    - `apiKey` (string): Your OpenAI API key.
    - `onData` (function): Callback function to handle the generated output. Receives the generated text as a parameter.
@@ -92,31 +91,7 @@ Here are some examples of using the OpenAI Toolkit:
    call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
    ```
 
-2. Saving Output to a File:
-
-   ```javascript
-   const { call } = require('openai-toolkit');
-   const fs = require('fs');
-
-   const input = 'Hello, GPT!';
-   const temperature = 0.6;
-   const maxTokens = 50;
-   const modelType = 'gpt-3.5-turbo';
-   const PARAMETERS = 'f';
-   const apiKey = 'your_api_key_here';
-
-   function onData(output) {
-     console.log(output);
-   }
-
-   function onEnd() {
-     console.log('Generation completed.');
-   }
-
-   call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
-   ```
-
-3. Analytics and Token Count:
+2. Analytics and Token Count:
 
    ```javascript
    const { call } = require('openai-toolkit');
