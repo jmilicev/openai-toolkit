@@ -17,16 +17,19 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
 
   const options = [
     'gpt-4',
-    'gpt-4-0314',
+    'gpt-4-0613',
     'gpt-4-32k',
-    'gpt-4-32k-0314',
+    'gpt-4-32k-0613',
     'gpt-3.5-turbo',
-    'gpt-3.5-turbo-0301'
-  ];
+    'gpt-3.5-turbo-0613',
+    'gpt-3.5-turbo-16k',
+    'gpt-3.5-turbo-16k-0613'
+    ];
 
   if(!options.includes(modelType)){
     onData("ERROR: model is not a valid option");
-    onData("options: gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301");
+    onData("options: gpt-4, gpt-4-0613, gpt-4-32k, gpt-4-32k-0613, gpt-3.5-turbo, gpt-3.5-turbo-0613, gpt-3.5-turbo-16k, gpt-3.5-turbo-16k-0613");
+
     process.exit();
   }
   
