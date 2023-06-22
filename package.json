@@ -9,6 +9,7 @@
   "author": "Jovan Milicev",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "dotenv": "^16.0.3"
   }
 }

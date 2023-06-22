@@ -1,5 +1,85 @@
 const https = require('https');
 const path = require('path');
+const axios = require('axios');
+
+const validModels = [
+  'gpt-4',
+  'gpt-4-32k',
+  'gpt-3.5-turbo',
+  'gpt-3.5-turbo-16k',
+  ];
+
+function callAPIStatic(input, temperature, maxTokens, modelType, PARAMETERS, apiKey) {
+  return new Promise((resolve, reject) => {
+    if (input === '') {
+      reject('\nERROR: cannot have empty message\n');
+      return;
+    }
+    if (temperature > 1 || temperature < 0) {
+      reject('ERROR: temperature must be between 0 and 1 inclusive');
+      return;
+    }
+    if (maxTokens < 1) {
+      reject('ERROR: max tokens cannot be 0 or negative');
+      return;
+    }
+  
+    if(!validModels.includes(modelType)){
+      reject("ERROR: model is not a valid option\noptions: gpt-4, gpt-4-32k, gpt-3.5-turbo, gpt-3.5-turbo-16k");
+    }
+
+    const data = {
+      model: modelType,
+      messages: [{ role: 'user', content: input }],
+      temperature: temperature,
+      max_tokens: maxTokens,
+    };
+
+    const options = {
+      hostname: 'api.openai.com',
+      path: '/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let responseData = '';
+
+      res.on('data', (chunk) => {
+        responseData += chunk.toString();
+      });
+
+      res.on('end', () => {
+        try {
+          const response = JSON.parse(responseData);
+          if (
+            response.choices &&
+            response.choices.length > 0 &&
+            response.choices[0].message &&
+            response.choices[0].message.content
+          ) {
+            const completion = response.choices[0].message.content;
+            resolve(completion);
+          } else {
+            reject('Unable to retrieve completion from the server response.');
+          }
+        } catch (error) {
+          reject(error);
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      reject(error);
+    });
+
+    req.write(JSON.stringify(data));
+    req.end();
+  });
+}
 
 function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd) {
   //check parameters
@@ -14,21 +94,9 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
     process.exit();
   }
 
-
-  const options = [
-    'gpt-4',
-    'gpt-4-0613',
-    'gpt-4-32k',
-    'gpt-4-32k-0613',
-    'gpt-3.5-turbo',
-    'gpt-3.5-turbo-0613',
-    'gpt-3.5-turbo-16k',
-    'gpt-3.5-turbo-16k-0613'
-    ];
-
-  if(!options.includes(modelType)){
+  if(!validModels.includes(modelType)){
     onData("ERROR: model is not a valid option");
-    onData("options: gpt-4, gpt-4-0613, gpt-4-32k, gpt-4-32k-0613, gpt-3.5-turbo, gpt-3.5-turbo-0613, gpt-3.5-turbo-16k, gpt-3.5-turbo-16k-0613");
+    onData("options: gpt-4, gpt-4-32k, gpt-3.5-turbo, gpt-3.5-turbo-16k");
 
     process.exit();
   }
@@ -145,5 +213,6 @@ function callAPI(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, o
 }
 
 module.exports = {
-  call: callAPI
+  call: callAPI,
+  callStatic: callAPIStatic
 };
