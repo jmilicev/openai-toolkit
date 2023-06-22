@@ -1,6 +1,6 @@
 const { call } = require('./caller');
 
-const input = 'what is a porche gt3rs';
+const input = 'what is a porche gt3rs' ;
 const temperature = 1;
 const maxTokens = 30;
 const modelType = 'gpt-3.5-turbo-16k'; // Replace with your desired model type
