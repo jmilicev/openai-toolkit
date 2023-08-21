@@ -1,119 +1,86 @@
+# openai-toolkit
 
-# OpenAI Toolkit
+This module provides a simple API wrapper for OpenAI's GPT. The module exports three primary functions: `callAPI`, `callAPIStatic`, and `callAPISustained`.
 
-The OpenAI Toolkit is a Node.js module that provides a convenient interface for interacting with OpenAI's GPT models through the OpenAI API. It allows you to generate text based on prompts and provides additional features such as estimating token count and cost.
+---
 
-## Prerequisites
+## Table of Contents
+- [Setup](#setup)
+- [Functions](#functions)
+  - [callAPI](#callapi)
+  - [callAPIStatic](#callapistatic)
+  - [callAPISustained](#callapisustained)
+- [Additional Utilities](#additional-utilities)
 
-Before using the OpenAI Toolkit, make sure you have the following installed:
+---
 
-- Node.js
-- NPM (Node Package Manager)
+## Setup
 
-## Installation
+1. Ensure that you have the following Node.js modules installed:
+    - `https`
+    - `path`
+    - `axios`
+    - `http`
 
-1. Install the OpenAI Toolkit module by running the following command in your project directory:
-
-   ```shell
-   npm install openai-toolkit
-   ```
-
-2. Require the module in your JavaScript file:
-
+2. Import the API wrapper:
    ```javascript
-   const { call } = require('openai-toolkit');
+   const { callAPI, callAPIStatic, callAPISustained } = require('./path-to-wrapper-file');
    ```
 
-## Usage
+---
 
-To use the OpenAI Toolkit, follow these steps:
+## Functions
 
-1. Get your OpenAI API key from the OpenAI website. You will need this key to make API requests.
+### callAPI
 
-2. Create a new JavaScript file (e.g., `app.js`) and require the OpenAI Toolkit module:
+**Parameters:**
 
-   ```javascript
-   const { call } = require('openai-toolkit');
-   ```
+- `input`: The text input you wish to send to the API.
+- `temperature`: The temperature setting, which should be between 0 and 1. A higher value makes the output more random, while a lower value makes it more deterministic.
+- `maxTokens`: The maximum number of tokens for the response.
+- `modelType`: The model type you wish to use (e.g., "gpt-4").
+- `PARAMETERS`: Parameters to determine the format of the response. Possible values include:
+  - "A"/"a": Adds analytics data to the output.
+  - "s": Streamlines the output without any headers or separators.
+  - "e": Adds an "END" marker to the output.
+- `apiKey`: Your OpenAI API key.
+- `onData`: A callback function that will receive chunks of data as they come in.
+- `onEnd`: A callback function that will be called when the data transmission is complete.
 
-3. Use the `call` function to generate text:
+### callAPIStatic
 
-   ```javascript
-   call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
-   ```
+This function calls the OpenAI API with a single static input and returns a completion.
 
-   - `input` (string): The prompt for generating text.
-   - `temperature` (number): Controls the randomness of the generated text. A higher value (e.g., 0.8) produces more random outputs, while a lower value (e.g., 0.2) produces more deterministic outputs.
-   - `maxTokens` (number): Limits the length of the generated text. You can set the maximum number of tokens the model should generate.
-   - `modelType` (string): Specifies the GPT model to use. For example, "gpt-3.5-turbo" is the most advanced model as of the last update.
-     - Valid options are: `'gpt-4'`,`'gpt-4-0314'`, `'gpt-4-32k'`, `'gpt-4-32k-0314'`, `'gpt-3.5-turbo'`, `'gpt-3.5-turbo-0301'`
-     - note you can only use gpt-4-* models if you have been given access by the openAI team, you do not have them default.
-   - `PARAMETERS` (string): Additional parameters for customizing the behavior of the function. Supported options include:
-     - `"a"`: Enable analytics to estimate token count and cost.
-     - `"e"`: Append an end indicator to the generated output.
-     - `"s"`: Silent mode, disables additional output.
-   - `apiKey` (string): Your OpenAI API key.
-   - `onData` (function): Callback function to handle the generated output. Receives the generated text as a parameter.
-   - `onEnd` (function): Callback function called when the generation process ends.
+**Parameters:**
 
-4. Run your JavaScript file using Node.js:
+- `input`: The text input you wish to send to the API.
+- `temperature`: Temperature setting for the API.
+- `maxTokens`: Maximum token count for the response.
+- `modelType`: Model type (e.g., "gpt-4").
+- `PARAMETERS`: Parameters for output format.
+- `apiKey`: Your OpenAI API key.
 
-   ```shell
-   node app.js
-   ```
+### callAPISustained
 
-5. The generated text will be displayed according to your specified parameters.
+This function offers a sustained conversation with the OpenAI model.
 
-## Examples
+**Parameters:**
 
-Here are some examples of using the OpenAI Toolkit:
+- `messages`: An array of message objects, each having a `role` (either "user" or "system") and a `content` (the message content).
+- `temperature`: Temperature setting for the API.
+- `maxTokens`: Maximum token count for the response.
+- `modelType`: Model type (e.g., "gpt-4").
+- `PARAMETERS`: Parameters for output format.
+- `apiKey`: Your OpenAI API key.
 
-1. Basic Usage:
+---
 
-   ```javascript
-   const { call } = require('openai-toolkit');
+## Additional Utilities
 
-   const input = 'Hello, GPT!';
-   const temperature = 0.6;
-   const maxTokens = 50;
-   const modelType = 'gpt-3.5-turbo';
-   const PARAMETERS = '';
-   const apiKey = 'your_api_key_here';
+- `validParameters`: Checks whether the provided parameters are valid or not.
+- `estimateTokenCount`: Estimates the token count based on text length. Each token is approximately 4 characters.
+- `getAnalytics`: Generates an analytics string based on token counts and costs.
 
-   function onData(output) {
-     console.log(output);
-   }
+---
 
-   function onEnd() {
-     console.log('Generation completed.');
-   }
-
-   call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
-   ```
-
-2. Analytics and Token Count:
-
-   ```javascript
-   const { call } = require('openai-toolkit');
-
-   const input = 'Hello, GPT!';
-   const temperature = 0.6;
-   const maxTokens = 50;
-   const modelType = 'gpt-3.5-turbo';
-   const PARAMETERS = 'a';
-   const apiKey = 'your_api_key_here';
-
-   function onData(output) {
-     console.log(output);
-   }
-
-   function onEnd() {
-     console.log('Generation completed.');
-   }
-
-   call(input, temperature, maxTokens, modelType, PARAMETERS, apiKey, onData, onEnd);
-   ```
-
-## License
-
-Feel free to use this project as you please!
+**Note**: Remember to always keep your API key confidential and never expose it directly in the code. Consider using environment variables or a configuration management solution. Always handle errors gracefully, and be aware of rate limits and costs associated with API calls.
