@@ -83,4 +83,5 @@ This function offers a sustained conversation with the OpenAI model.
 
 ---
 
-**Note**: Remember to always keep your API key confidential and never expose it directly in the code. Consider using environment variables or a configuration management solution. Always handle errors gracefully, and be aware of rate limits and costs associated with API calls.
+**Note**: You can use a system message with the shorthand delimeter ';;;;;' in call and callStatic.
+I.E, if you want to ask "what is the capital of france" with the system message "only reply in all caps", you can pass the input variable as: 'what is the capital of france;;;;;only reply in all caps'.
