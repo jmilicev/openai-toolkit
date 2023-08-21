@@ -40,7 +40,7 @@ This module provides a simple API wrapper for OpenAI's GPT. The module exports t
 - `maxTokens`: The maximum number of tokens for the response.
 - `modelType`: The model type you wish to use (e.g., "gpt-4").
 - `PARAMETERS`: Parameters to determine the format of the response. Possible values include:
-  - "A"/"a": Adds analytics data to the output.
+  - "a": Adds analytics data to the output.
   - "s": Streamlines the output without any headers or separators.
   - "e": Adds an "END" marker to the output.
 - `apiKey`: Your OpenAI API key.
