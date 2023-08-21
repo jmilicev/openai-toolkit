@@ -22,9 +22,9 @@ This module provides a simple API wrapper for OpenAI's GPT. The module exports t
     - `axios`
     - `http`
 
-2. Import the API wrapper:
+2. import openai-toolkit:
    ```javascript
-   const { callAPI, callAPIStatic, callAPISustained } = require('./path-to-wrapper-file');
+   const { callAPI, callAPIStatic, callAPISustained } = require('openai-toolkit');
    ```
 
 ---
